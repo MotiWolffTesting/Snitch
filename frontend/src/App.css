@@ -1,38 +1,163 @@
-.App {
-  text-align: center;
+/* Military theme colors */
+:root {
+  --primary-bg: #f4f8fb;
+  --primary-card: #ffffff;
+  --primary-accent: #1976d2;
+  --primary-accent-hover: #1565c0;
+  --primary-light: #e3f2fd;
+  --primary-warning: #ffb300;
+  --primary-danger: #e53935;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  background-color: var(--primary-bg);
+  font-family: 'Roboto', sans-serif;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+.app-container {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  background: var(--primary-bg);
+}
+
+/* Navbar styling */
+.navbar {
+  background: var(--primary-accent) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.navbar-brand {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Card styling */
+.card {
+  border: none;
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.08);
+  background: var(--primary-card);
+  backdrop-filter: blur(6px);
+}
+
+.card-header {
+  background: var(--primary-accent);
   color: white;
+  font-weight: 500;
 }
 
-.App-link {
-  color: #61dafb;
+/* Button styling */
+.btn-primary {
+  background: var(--primary-accent);
+  border-color: var(--primary-accent);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.btn-primary:hover {
+  background: var(--primary-accent-hover);
+  border-color: var(--primary-accent-hover);
+}
+
+.btn-success {
+  background: #43a047;
+  border-color: #43a047;
+}
+
+.btn-success:hover {
+  background: #388e3c;
+  border-color: #388e3c;
+}
+
+.btn-outline-primary {
+  color: var(--primary-accent);
+  border-color: var(--primary-accent);
+}
+
+.btn-outline-primary:hover {
+  background: var(--primary-accent);
+  border-color: var(--primary-accent);
+  color: #fff;
+}
+
+/* Alert styling */
+.alert {
+  border: none;
+  box-shadow: 0 2px 4px rgba(25, 118, 210, 0.05);
+}
+
+.alert-info {
+  background-color: var(--primary-light);
+  border-left: 4px solid var(--primary-accent);
+}
+
+.alert-warning {
+  background-color: #fff8e1;
+  border-left: 4px solid var(--primary-warning);
+}
+
+.alert-danger {
+  background-color: #ffebee;
+  border-left: 4px solid var(--primary-danger);
+}
+
+/* Form styling */
+.form-control {
+  border: 1px solid #ddd;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+  background: #f9fbfd;
+}
+
+.form-control:focus {
+  border-color: var(--primary-accent);
+  box-shadow: 0 0 0 0.2rem rgba(25, 118, 210, 0.12);
+  background: #fff;
+}
+
+/* Table styling */
+.table {
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.table thead th {
+  background: var(--military-dark);
+  color: white;
+  font-weight: 500;
+  border: none;
+}
+
+th {
+  color: #212529 !important;      /* Bootstrap default text color */
+  background-color: #f8f9fa !important; /* Bootstrap default table header bg */
+  opacity: 1 !important;
+}
+
+/* Badge styling */
+.badge {
+  padding: 0.5em 0.75em;
+  font-weight: 500;
+}
+
+.badge-danger {
+  background-color: var(--military-accent);
+}
+
+/* Loading spinner */
+.spinner-border {
+  color: var(--military-accent);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--military-green);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--military-dark);
 }

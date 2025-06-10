@@ -1,0 +1,64 @@
+.login-bg {
+    background: linear-gradient(135deg, #232d1b 0%, #495e35 100%);
+    min-height: 100vh;
+  }
+  
+  .login-card {
+    max-width: 400px;
+    border-radius: 16px;
+    background: #2c3e23;
+    color: #e0e6d4;
+  }
+  
+  .military-title {
+    font-family: 'Oswald', 'Arial Black', Arial, sans-serif;
+    font-size: 2.2rem;
+    color: #bfcf8c;
+    letter-spacing: 2px;
+    text-shadow: 1px 2px 0 #232d1b;
+  }
+  
+  .military-subtitle {
+    color: #a3b18a;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .btn-military {
+    background-color: #6b8e23;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    transition: background 0.2s;
+  }
+  .btn-military:hover, .btn-military:focus {
+    background-color: #556b2f;
+    color: #fff;
+  }
+  
+  .military-link {
+    color: #bfcf8c;
+    text-decoration: underline;
+    font-weight: 500;
+  }
+  .military-link:hover {
+    color: #e0e6d4;
+  }
+  
+  .form-label {
+    color: #bfcf8c;
+    font-weight: 500;
+  }
+  
+  .form-control-lg {
+    background: #3a4d2d;
+    color: #e0e6d4;
+    border: 1px solid #6b8e23;
+    border-radius: 8px;
+  }
+  .form-control-lg:focus {
+    background: #495e35;
+    color: #fff;
+    border-color: #bfcf8c;
+  } 

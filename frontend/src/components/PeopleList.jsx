@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { getPeople, createPerson } from "../Services/api";
+import { getPeople, createPerson, deletePerson } from "../Services/api";
 
 const roleLabels = {
     0: "Agent",
     1: "Terrorist",
     2: "Intel",
     3: "Civilian",
+    Agent: "Agent",
+    Terrorist: "Terrorist",
+    Intel: "Intel",
+    Civilian: "Civilian",
 };
 
 export default function PeopleList() {
@@ -62,6 +66,16 @@ export default function PeopleList() {
         }
     };
 
+    const handleDelete = async (id) => {
+        if (!window.confirm("Are you sure you want to delete this person?")) return;
+        try {
+            await deletePerson(id);
+            fetchPeople();
+        } catch (err) {
+            setError(err.message || "Failed to delete person");
+        }
+    };
+
     return (
         <div className="container mt-4">
             <div className="card shadow-sm">
@@ -77,17 +91,25 @@ export default function PeopleList() {
                     <ul className="list-group">
                         {people.map((p) => (
                             <li
-                                key={p.id}
+                                key={p.Id}
                                 className="list-group-item d-flex justify-content-between align-items-center"
                             >
                                 <span>
-                                    <span className="fw-bold">{p.name}</span>{" "}
+                                    <span className="fw-bold">{p.Name}</span>{" "}
                                     <span className="badge bg-secondary ms-2">
-                                        {roleLabels[p.role]}
+                                        {roleLabels[p.Role] || "Unknown"}
                                     </span>
-                                    <span className="text-muted ms-2">(ID: {p.id})</span>
+                                    <span className="text-muted ms-2">(ID: {p.Id})</span>
                                 </span>
-                                <span className="text-muted">Code: {p.secretCode}</span>
+                                <span>
+                                    <span className="text-muted me-3">Code: {p.SecretCode}</span>
+                                    <button
+                                        className="btn btn-outline-danger btn-sm"
+                                        onClick={() => handleDelete(p.Id)}
+                                    >
+                                        Delete
+                                    </button>
+                                </span>
                             </li>
                         ))}
                     </ul>

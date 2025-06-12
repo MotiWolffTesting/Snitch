@@ -1,6 +1,6 @@
 # Snitch Intelligence System
 
-A comprehensive intelligence and surveillance system built with .NET 8 Web API and React TypeScript.
+A comprehensive intelligence and surveillance system built with .NET 8 Web API and React.
 
 ## Overview
 
@@ -16,10 +16,11 @@ The Snitch system provides tools for intelligence gathering, person tracking, re
 - BCrypt for password hashing
 
 ### Frontend  
-- React 18 with TypeScript
+- React 18
 - React Router for navigation
 - Axios for API communication
-- Modern responsive design
+- Material-UI for components
+- Bootstrap for styling
 
 ### Infrastructure
 - Docker & Docker Compose
@@ -37,12 +38,16 @@ The Snitch system provides tools for intelligence gathering, person tracking, re
 - Behavioral pattern analysis
 - Threat assessment tools
 - System audit logging
+- OpenAI integration for text analysis
+- Hardcoded analysis fallback
 
 ## Quick Start
 
 ### Prerequisites
 - Docker and Docker Compose
 - Git
+- Node.js 18+ (for frontend development)
+- .NET 8 SDK (for backend development)
 
 ### Development Setup
 
@@ -52,59 +57,56 @@ git clone <your-repo-url>
 cd snitch-system
 ```
 
-2. Copy environment configuration:
+2. Backend Setup:
 ```bash
-cp .env.example .env
-# Edit .env with your settings
+cd backend
+dotnet restore
+dotnet run
 ```
 
-3. Start development environment:
+3. Frontend Setup:
 ```bash
-./start-dev.sh
+cd frontend
+npm install
+npm start
 ```
 
 4. Access the application:
-- Frontend: http://localhost:3001
-- Backend API: http://localhost:5001
-- API Documentation: http://localhost:5001/swagger
-
-### Production Setup
-
-1. Configure environment variables in `.env`
-
-2. Start production environment:
-```bash
-./start-prod.sh
-```
-
-3. Access the application:
 - Frontend: http://localhost:3000
-- Backend API: http://localhost:5000
+- Backend API: http://localhost:5243
+- API Documentation: http://localhost:5243/swagger
 
-## Development
-
-### Project Structure
+## Project Structure
 ```
 snitch-system/
 ├── backend/              # .NET 8 Web API
 │   ├── Controllers/      # API controllers
 │   ├── Models/          # Data models
 │   ├── Services/        # Business logic
-│   └── Data/            # Database context
-├── frontend/            # React TypeScript app
-│   ├── src/components/  # React components
-│   ├── src/services/    # API services
-│   └── src/hooks/       # Custom hooks
-├── docker-compose.yml   # Production setup
-└── docker-compose.dev.yml # Development setup
+│   ├── Data/            # Database context
+│   └── Migrations/      # EF Core migrations
+├── frontend/            # React app
+│   ├── src/
+│   │   ├── components/  # React components
+│   │   ├── Services/    # API services
+│   │   └── hooks/       # Custom hooks
+│   ├── public/          # Static files
+│   └── build/           # Production build
+├── Dockerfile           # Frontend Dockerfile
+└── nginx.conf          # Nginx configuration
 ```
 
 ### Available Scripts
 
-- `./start-dev.sh` - Start development environment
-- `./start-prod.sh` - Start production environment  
-- `./stop.sh` - Stop all services
-- `./setup-db.sh` - Initialize database
+Frontend:
+- `npm start` - Start development server
+- `npm build` - Build for production
+- `npm test` - Run tests
+
+Backend:
+- `dotnet run` - Start development server
+- `dotnet build` - Build the project
+- `dotnet test` - Run tests
 
 ### API Endpoints
 
@@ -114,41 +116,50 @@ snitch-system/
 - `POST /api/auth/refresh` - Refresh token
 
 #### People Management
-- `GET /api/people` - List all people
-- `GET /api/people/{id}` - Get person details
-- `POST /api/people` - Create person
-- `PUT /api/people/{id}` - Update person
-- `DELETE /api/people/{id}` - Delete person
+- `GET /api/People` - List all people
+- `GET /api/People/{id}` - Get person details
+- `POST /api/People` - Create person
+- `PUT /api/People/{id}` - Update person
+- `DELETE /api/People/{id}` - Delete person
 
 #### Reports
-- `GET /api/reports` - List all reports
-- `GET /api/reports/{id}` - Get report details
-- `POST /api/reports` - Submit report
-- `PUT /api/reports/{id}` - Update report
+- `GET /api/Reports` - List all reports
+- `GET /api/Reports/{id}` - Get report details
+- `POST /api/Reports` - Submit report
+- `PUT /api/Reports/{id}` - Update report
+- `POST /api/Reports/import-csv` - Import reports from CSV
 
 #### Alerts
-- `GET /api/alerts` - List alerts
-- `POST /api/alerts` - Create alert
-- `PUT /api/alerts/{id}` - Update alert
+- `GET /api/Alerts` - List alerts
+- `POST /api/Alerts` - Create alert
+- `PUT /api/Alerts/{id}` - Update alert
 
-#### Analytics
-- `GET /api/analytics/dashboard` - Dashboard data
-- `GET /api/analytics/reports` - Report analytics
+#### Analysis
+- `GET /api/AnalysisPreference` - Get analysis preference
+- `POST /api/AnalysisPreference` - Set analysis preference
 
 ## Environment Variables
 
-See `.env.example` for all available configuration options.
+### Backend (.env)
+```
+DB_SERVER=localhost
+DB_NAME=snitch_intel
+DB_USER=your_db_user
+DB_PASSWORD=your_secure_password
+JWT_SECRET_KEY=your_secure_jwt_key
+JWT_ISSUER=http://localhost:5243
+JWT_AUDIENCE=http://localhost:3000
+OPENAI_API_KEY=your_openai_api_key
+```
 
-### Required Variables
-- `MYSQL_ROOT_PASSWORD` - MySQL root password
-- `MYSQL_DATABASE` - Database name
-- `MYSQL_USER` - Database user
-- `MYSQL_PASSWORD` - Database password
-- `JWT_SECRET` - JWT signing key (min 32 characters)
+### Frontend (.env)
+```
+REACT_APP_API_BASE_URL=http://localhost:5243/api
+```
 
 ## Database
 
-The system uses MySQL 8.0 with Entity Framework Core migrations.
+The system uses MySQL with Entity Framework Core migrations.
 
 ### Models
 - **User** - System users with authentication
@@ -177,6 +188,8 @@ dotnet ef database update
 - Input validation and sanitization
 - SQL injection prevention
 - Audit logging
+- Environment variable configuration
+- Secure API endpoints
 
 ## Contributing
 

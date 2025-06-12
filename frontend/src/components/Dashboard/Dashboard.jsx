@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getPeople, getAlerts } from "../../Services/api";
+import { getPeople, getAlerts, deleteAlert } from "../../Services/api";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 /**
@@ -35,11 +35,21 @@ export default function Dashboard() {
     }, []);
 
     // Filter and categorize data for display
-    const stars = people.filter((p) => p.recruitScore > 0.7); // Quality informants with high recruit scores
+    const stars = people.filter((p) => p.RecruitScore > 0.7); // Quality informants with high recruit scores
     const dangerous = people.filter(
-        (p) => p.riskLevel === "HIGH" || p.riskLevel === "CRITICAL"
+        (p) => p.RiskLevel === "HIGH" || p.RiskLevel === "CRITICAL"
     ); // High-risk targets
-    const activeAlerts = alerts.filter((a) => a.status !== "RESOLVED"); // Non-resolved alerts
+    const activeAlerts = alerts.filter((a) => a.Status !== "RESOLVED"); // Non-resolved alerts
+
+    const handleDeleteAlert = async (id) => {
+        if (!window.confirm("Are you sure you want to delete this alert?")) return;
+        try {
+            await deleteAlert(id);
+            setAlerts((prev) => prev.filter((a) => a.Id !== id));
+        } catch (err) {
+            setError(err.message || "Failed to delete alert");
+        }
+    };
 
     return (
         <div className="container mt-4">
@@ -98,17 +108,17 @@ export default function Dashboard() {
                     ) : (
                         <div className="list-group">
                             {stars.map((person) => (
-                                <div key={person.id} className="list-group-item">
+                                <div key={person.Id} className="list-group-item">
                                     <div className="d-flex justify-content-between align-items-center">
                                         <div>
-                                            <h5 className="mb-1">{person.name}</h5>
+                                            <h5 className="mb-1">{person.Name}</h5>
                                             <small className="text-muted">
-                                                Code: {person.secretCode}
+                                                Code: {person.SecretCode}
                                             </small>
                                         </div>
                                         <div>
                                             <span className="badge bg-success">
-                                                Score: {person.recruitScore.toFixed(2)}
+                                                Score: {(person.RecruitScore ?? 0).toFixed(2)}
                                             </span>
                                         </div>
                                     </div>
@@ -132,23 +142,22 @@ export default function Dashboard() {
                     ) : (
                         <div className="list-group">
                             {dangerous.map((person) => (
-                                <div key={person.id} className="list-group-item">
+                                <div key={person.Id} className="list-group-item">
                                     <div className="d-flex justify-content-between align-items-center">
                                         <div>
-                                            <h5 className="mb-1">{person.name}</h5>
+                                            <h5 className="mb-1">{person.Name}</h5>
                                             <small className="text-muted">
-                                                Code: {person.secretCode}
+                                                Code: {person.SecretCode}
                                             </small>
                                         </div>
                                         <div>
                                             <span
-                                                className={`badge bg-${person.riskLevel === "CRITICAL" ? "danger" : "warning"
-                                                    }`}
+                                                className={`badge bg-${person.RiskLevel === "CRITICAL" ? "danger" : "warning"}`}
                                             >
-                                                {person.riskLevel}
+                                                {person.RiskLevel}
                                             </span>
                                             <span className="ms-2 badge bg-secondary">
-                                                Threat: {person.threatScore.toFixed(2)}
+                                                Threat: {(person.ThreatScore ?? 0).toFixed(2)}
                                             </span>
                                         </div>
                                     </div>
@@ -172,19 +181,23 @@ export default function Dashboard() {
                     ) : (
                         <div className="list-group">
                             {activeAlerts.map((alert) => (
-                                <div key={alert.id} className="list-group-item">
+                                <div key={alert.Id} className="list-group-item">
                                     <div className="d-flex justify-content-between align-items-center">
                                         <div>
-                                            <h5 className="mb-1">{alert.title}</h5>
-                                            <p className="mb-1">{alert.description}</p>
+                                            <h5 className="mb-1">{alert.Title}</h5>
+                                            <p className="mb-1">{alert.Description}</p>
                                             <small className="text-muted">
-                                                Created: {new Date(alert.createdAt).toLocaleString()}
+                                                Created: {new Date(alert.CreatedAt).toLocaleString()}
                                             </small>
                                         </div>
-                                        <span
-                                            className={`badge bg-${alert.severity.toLowerCase()}`}
-                                        >
-                                            {alert.severity}
+                                        <span>
+                                            <span className={`badge bg-${(alert.Severity || '').toLowerCase()}`}>{alert.Severity}</span>
+                                            <button
+                                                className="btn btn-outline-danger btn-sm ms-3"
+                                                onClick={() => handleDeleteAlert(alert.Id)}
+                                            >
+                                                Delete
+                                            </button>
                                         </span>
                                     </div>
                                 </div>

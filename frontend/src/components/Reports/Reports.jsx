@@ -7,7 +7,6 @@ export default function Reports() {
     const [error, setError] = useState(null);
     const [editingId, setEditingId] = useState(null);
     const [editText, setEditText] = useState("");
-    const [deletingId, setDeletingId] = useState(null);
 
     useEffect(() => {
         fetchReports();
@@ -22,15 +21,15 @@ export default function Reports() {
     };
 
     const handleEdit = (report) => {
-        setEditingId(report.id);
-        setEditText(report.reportText);
+        setEditingId(report.Id);
+        setEditText(report.ReportText);
     };
 
     const handleEditSave = async (id) => {
         try {
             await updateReport(id, {
-                ...reports.find((r) => r.id === id),
-                reportText: editText,
+                ...reports.find((r) => r.Id === id),
+                ReportText: editText,
             });
             setEditingId(null);
             setEditText("");
@@ -61,11 +60,11 @@ export default function Reports() {
             )}
             <ul className="list-group">
                 {reports.map((r) => (
-                    <li key={r.id} className="list-group-item">
+                    <li key={r.Id} className="list-group-item">
                         <div className="fw-bold">
-                            Reporter: {r.reporterId} → Target: {r.targetId}
+                            Reporter: {r.ReporterId} → Target: {r.TargetId}
                         </div>
-                        {editingId === r.id ? (
+                        {editingId === r.Id ? (
                             <>
                                 <textarea
                                     className="form-control mb-2"
@@ -74,7 +73,7 @@ export default function Reports() {
                                 />
                                 <button
                                     className="btn btn-success btn-sm me-2"
-                                    onClick={() => handleEditSave(r.id)}
+                                    onClick={() => handleEditSave(r.Id)}
                                 >
                                     Save
                                 </button>
@@ -87,9 +86,9 @@ export default function Reports() {
                             </>
                         ) : (
                             <>
-                                <div>{r.reportText}</div>
+                                    <div>{r.ReportText}</div>
                                 <div className="text-muted small">
-                                    Submitted: {new Date(r.submittedAt).toLocaleString()}
+                                        Submitted: {new Date(r.SubmittedAt).toLocaleString()}
                                 </div>
                                 <button
                                     className="btn btn-outline-primary btn-sm me-2 mt-2"
@@ -99,7 +98,7 @@ export default function Reports() {
                                 </button>
                                 <button
                                     className="btn btn-outline-danger btn-sm mt-2"
-                                    onClick={() => handleDelete(r.id)}
+                                        onClick={() => handleDelete(r.Id)}
                                 >
                                     Delete
                                 </button>

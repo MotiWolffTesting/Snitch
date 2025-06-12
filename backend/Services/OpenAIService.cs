@@ -6,11 +6,12 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using backend.Models;
 
 namespace backend.Services
 {
     // OpenAIService handles interactions with OpenAI's API for text analysis.
-    public class OpenAIService
+    public class OpenAIService : IOpenAIService
     {
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
@@ -24,18 +25,33 @@ namespace backend.Services
         }
 
         // Analyze text using OpenAI's API
-        public async Task<OpenAIAnalysis> AnalyzeTextAsync(string text)
+        public async Task<OpenAIAnalysis> AnalyzeTextAsync(string text, Person? target = null)
         {
             try
             {
+                // Prepare context about the target if available
+                string targetContext = "";
+                if (target != null)
+                {
+                    targetContext = $"\nTarget Context:\n" +
+                        $"Current Risk Level: {target.RiskLevel}\n" +
+                        $"Total Reports Received: {target.TotalReportsReceived}\n" +
+                        $"Total Reports Made: {target.TotalReportsMade}\n" +
+                        $"Network Centrality: {target.NetworkCentrality}\n" +
+                        $"Influence Score: {target.InfluenceScore}\n" +
+                        $"Threat Score: {target.ThreatScore}\n" +
+                        $"Recruit Score: {target.RecruitScore}\n" +
+                        $"Last Report At: {target.LastReportAt}\n";
+                }
+
                 // Prepare request
                 var request = new
                 {
                     model = "gpt-3.5-turbo",
                     messages = new[]
                     {
-                        new { role = "system", content = "You are an intelligence analyst. Analyze the following text and respond ONLY with a JSON object with the following fields: riskLevel (string: 'Low', 'Medium', or 'High'), recruitScore (number between 0-10), and confidenceLevel (string: 'Low', 'Medium', or 'High'). Do not include any explanation or text outside the JSON object." },
-                        new { role = "user", content = text }
+                        new { role = "system", content = "You are an intelligence analyst. Analyze the following text and target context, and respond ONLY with a JSON object with the following fields: riskLevel (string: 'Low', 'Medium', or 'High'), recruitScore (number between 0-10), and confidenceLevel (string: 'Low', 'Medium', or 'High'). Consider both the new report and the historical context when making your assessment. Do not include any explanation or text outside the JSON object." },
+                        new { role = "user", content = text + targetContext }
                     }
                 };
 

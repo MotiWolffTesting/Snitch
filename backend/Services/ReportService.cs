@@ -14,17 +14,20 @@ public class ReportService : IReportService
     private readonly IAnalyticsService _analyticsService;
     private readonly IAlertService _alertService;
     private readonly ILogger<ReportService> _logger;
+    private readonly IOpenAIService _openAIService;
 
     public ReportService(
         SnitchDbContext context,
         IAnalyticsService analyticsService,
         IAlertService alertService,
-        ILogger<ReportService> logger)
+        ILogger<ReportService> logger,
+        IOpenAIService openAIService)
     {
         _context = context;
         _analyticsService = analyticsService;
         _alertService = alertService;
         _logger = logger;
+        _openAIService = openAIService;
     }
 
     // Create a new report and process it for analytics
@@ -52,6 +55,17 @@ public class ReportService : IReportService
         // Update cached analytics for reporter and target
         await UpdateCachedAnalyticsAsync(reporter.Id);
         await UpdateCachedAnalyticsAsync(target.Id);
+
+        // Get updated target with analytics
+        target = await _context.People
+            .Include(p => p.ReportsReceived)
+            .FirstOrDefaultAsync(p => p.Id == target.Id);
+
+        // Process report with target context
+        var analysis = await _openAIService.AnalyzeTextAsync(report.ReportText, target);
+        target.RiskLevel = Enum.TryParse<RiskLevel>(analysis.RiskLevel, true, out var parsedRiskLevel) ? parsedRiskLevel : target.RiskLevel;
+        target.RecruitScore = (decimal)analysis.RecruitScore;
+        target.UpdatedAt = DateTime.UtcNow;
 
         // Check for high-risk reports and create alerts
         if (analytics.RiskLevel == RiskLevel.HIGH || analytics.RiskLevel == RiskLevel.CRITICAL)

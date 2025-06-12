@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { createReport, getPeople, uploadReportsCsv } from "../../Services/api";
-import { useNavigate } from "react-router-dom";
+import AnalysisPreferenceToggle from '../AnalysisPreferenceToggle';
 
 export default function ReportSubmission() {
     const [people, setPeople] = useState([]);
@@ -12,7 +12,6 @@ export default function ReportSubmission() {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [csvFile, setCsvFile] = useState(null);
-    const navigate = useNavigate();
 
     useEffect(() => {
         getPeople().then((data) => {
@@ -88,13 +87,16 @@ export default function ReportSubmission() {
     };
 
     // Filtered lists
-    const agentPeople = people.filter((p) => p.role === "Agent");
+    const agentPeople = people.filter((p) => p.Role === "Agent");
     const targetPeople = people.filter(
-        (p) => p.role === "Terrorist" || p.role === "Intel"
+        (p) => p.Role === "Terrorist" || p.Role === "Intel"
     );
 
     return (
         <div className="container mt-4">
+            <div className="mb-4">
+                <AnalysisPreferenceToggle />
+            </div>
             <h2 className="mb-4">Submit Intelligence Report</h2>
 
             {/* Privacy Notice */}
@@ -124,10 +126,10 @@ export default function ReportSubmission() {
                                         onChange={(e) => setReporterId(e.target.value)}
                                         required
                                     >
-                                        <option value="">Select Reporter...</option>
+                                        <option key="default-reporter" value="">Select Reporter...</option>
                                         {agentPeople.map((p) => (
-                                            <option key={p.id} value={p.id}>
-                                                {p.name} ({roleLabels[p.role]}) [ID: {p.id}]
+                                            <option key={`reporter-${p.Id}`} value={p.Id}>
+                                                {p.Name} ({roleLabels[p.Role]}) [ID: {p.Id}]
                                             </option>
                                         ))}
                                     </select>
@@ -140,10 +142,10 @@ export default function ReportSubmission() {
                                         onChange={(e) => setTargetId(e.target.value)}
                                         required
                                     >
-                                        <option value="">Select Target...</option>
+                                        <option key="default-target" value="">Select Target...</option>
                                         {targetPeople.map((p) => (
-                                            <option key={p.id} value={p.id}>
-                                                {p.name} ({roleLabels[p.role]}) [ID: {p.id}]
+                                            <option key={`target-${p.Id}`} value={p.Id}>
+                                                {p.Name} ({roleLabels[p.Role]}) [ID: {p.Id}]
                                             </option>
                                         ))}
                                     </select>

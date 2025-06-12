@@ -42,6 +42,8 @@ export const getPerson = (id) =>
   api.get(`/People/${id}`).then((res) => res.data);
 export const createPerson = (data) =>
   api.post("/People", data).then((res) => res.data);
+export const deletePerson = (id) =>
+  api.delete(`/People/${id}`).then((res) => res.data);
 
 // Reports
 export const getReports = () =>
@@ -78,5 +80,17 @@ export const uploadReportsCsv = async (file) => {
 // Alerts
 export const getAlerts = () =>
   api.get("/Alerts/active").then((res) => res.data);
+export const deleteAlert = (id) =>
+  api.delete(`/Alerts/${id}`).then((res) => res.data);
+
+// Analysis Preference
+export const getAnalysisPreference = () =>
+  api.get("/AnalysisPreference").then((res) => res.data);
+export const setAnalysisPreference = (useOpenAI) =>
+  api.post("/AnalysisPreference", useOpenAI, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then((res) => res.data);
 
 // Add more as needed

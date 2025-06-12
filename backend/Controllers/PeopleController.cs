@@ -21,6 +21,25 @@ public class PeopleController : ControllerBase
         _analyticsService = analyticsService;
     }
 
+    // DTO for person details with analytics fields
+    public class PersonDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string SecretCode { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        public int TotalReportsMade { get; set; }
+        public int TotalReportsReceived { get; set; }
+        public decimal ReportingConsistency { get; set; }
+        public decimal NetworkCentrality { get; set; }
+        public decimal InfluenceScore { get; set; }
+        public decimal RecruitScore { get; set; }
+        public decimal ThreatScore { get; set; }
+        public string RiskLevel { get; set; } = string.Empty;
+    }
+
     // Create a new person
     [HttpPost]
     public async Task<ActionResult<Person>> CreatePerson(Person person)
@@ -37,7 +56,7 @@ public class PeopleController : ControllerBase
 
     // Get a person by ID (with related data)
     [HttpGet("{id}")]
-    public async Task<ActionResult<Person>> GetPerson(int id)
+    public async Task<ActionResult<PersonDto>> GetPerson(int id)
     {
         var person = await _context.People
             .Include(p => p.ReportsMade)
@@ -49,7 +68,25 @@ public class PeopleController : ControllerBase
         if (person == null)
             return NotFound();
 
-        return person;
+        var dto = new PersonDto
+        {
+            Id = person.Id,
+            Name = person.Name,
+            SecretCode = person.SecretCode,
+            Role = person.Role.ToString(),
+            CreatedAt = person.CreatedAt,
+            UpdatedAt = person.UpdatedAt,
+            TotalReportsMade = person.TotalReportsMade,
+            TotalReportsReceived = person.TotalReportsReceived,
+            ReportingConsistency = person.ReportingConsistency,
+            NetworkCentrality = person.NetworkCentrality,
+            InfluenceScore = person.InfluenceScore,
+            RecruitScore = person.RecruitScore,
+            ThreatScore = person.ThreatScore,
+            RiskLevel = person.RiskLevel.ToString(),
+        };
+
+        return dto;
     }
 
     // Get all people, with optional search and risk level filter

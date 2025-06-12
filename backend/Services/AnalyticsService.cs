@@ -10,12 +10,12 @@ namespace backend.Services;
 public class AnalyticsService : IAnalyticsService
 {
     private readonly SnitchDbContext _context;
-    private readonly OpenAIService _openAIService;
+    private readonly IOpenAIService _openAIService;
     private readonly ILogger<AnalyticsService> _logger;
 
     public AnalyticsService(
         SnitchDbContext context,
-        OpenAIService openAIService,
+        IOpenAIService openAIService,
         ILogger<AnalyticsService> logger)
     {
         _context = context;

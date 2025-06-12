@@ -23,6 +23,7 @@ public class SnitchDbContext : DbContext
     public DbSet<ThreatAssessment> ThreatAssessments { get; set; } = null!; // Table for storing threat assessments
     public DbSet<SystemLog> SystemLogs { get; set; } = null!; // Table for storing system logs
     public DbSet<User> Users { get; set; }
+    public DbSet<AnalysisPreference> AnalysisPreferences { get; set; } = null!;
 
     // This method is called when the model is being created
     // We use it to configure our database schema and relationships
